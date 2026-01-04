@@ -80,7 +80,7 @@ class AppDatabase{
 
  Future<List<ExpenseModel>> fetchExpence()async{
    var db = await getDb();
-  var data =  await db.query(EXPENSE_TABLE);
+  var data =  await db.query(EXPENSE_TABLE,orderBy: "$COLUMN_EXPENSE_TIMESTAMP DESC");
   List<ExpenseModel> expenseList = [] ;
   for (var dataList in data){
     expenseList.add(ExpenseModel.fromMap(dataList));

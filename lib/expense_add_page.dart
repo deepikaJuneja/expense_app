@@ -8,8 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'app_constants/spaces_padding.dart';
 
 class ExpenseAddPage extends StatefulWidget {
-  ExpenseAddPage({super.key});
-
+  ExpenseAddPage({super.key, required this.Amount});
+num Amount;
   @override
   State<ExpenseAddPage> createState() => _ExpenseAddPageState();
 }
@@ -127,14 +127,23 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
               commonElevatedBtn(
                 backgroundColor: Colors.black,
                 onPressed: () {
+
+                 if (selectExpenseType == "Credit"){
+                    widget.Amount += double.parse(expenseAmountController.text.toString());
+                  print("${widget.Amount}, credit");
+                 }else
+                   {
+                      widget.Amount -= double.parse(expenseAmountController.text.toString());
+                      print("${widget.Amount}, debit");
+                   }
                   BlocProvider.of<BlocExpense>(context).add(
                     AddExpense(
                       newExpense: ExpenseModel(
                         expenseAmount: double.parse(
                           expenseAmountController.text.toString(),
                         ),
-                        expenseBalance: 0,
-                        expenseCatType: selectedExpenseId - 1,
+                        expenseBalance: widget.Amount.toDouble(),
+                        expenseCatType: selectedExpenseId - 1 ,
                         expenseDesc: expenseDescController.text.toString(),
                         expenseId: 0,
                         expenseTitle: expenseNameController.text.toString(),
@@ -295,7 +304,7 @@ class _ExpenseAddPageState extends State<ExpenseAddPage> {
     );
     print(Date!.millisecondsSinceEpoch.toString());
     if (selectedDate != null) {
-      selectedDate = Date!; //("${Date!.year}/${Date.month}/${Date.day}");
+      selectedDate = Date; //("${Date!.year}/${Date.month}/${Date.day}");
       setState(() {});
     }
   }

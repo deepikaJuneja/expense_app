@@ -1,17 +1,23 @@
 import 'package:expense_app/app_database.dart';
 import 'package:expense_app/expense_bloc/bloc_expense.dart';
 import 'package:expense_app/expense_add_page.dart';
+import 'package:expense_app/provider/theme_provider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 
 import 'home_page.dart';
 
 void main() {
   runApp(
-    BlocProvider(
-      create: (context) => BlocExpense(appDb: AppDatabase.db),
-      child: const MyApp(),
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: BlocProvider(
+        create: (context) => BlocExpense(appDb: AppDatabase.db),
+        child: const MyApp(),
+      ),
     ),
   );
 }
@@ -19,11 +25,15 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Provider.of<ThemeProvider>(context,listen: false).updateThemeFirstTime();
+    var value = Provider.of<ThemeProvider>(context).isDark;
+    // print("$value, value kya h ");
     return MaterialApp(
       title: 'Flutter Demo',
+      themeMode: value ? ThemeMode.dark : ThemeMode.light,
+      darkTheme: ThemeData(scaffoldBackgroundColor: Colors.blueGrey),
       theme: ThemeData(
         // This is the theme of your application.
         //
